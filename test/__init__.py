@@ -22,13 +22,3 @@ def make__test_data(n_classes=10, n_docs=100, n_features=1, feature_weight=(0.5,
         add_class(n, n_docs, n_features, feature_weight, X, D)
         n += 1
     return X
-
-
-if __name__ == '__main__':
-    X = make_test(n_classes=5, n_docs=10, n_features=1)
-    for v in X:
-        print(v)
-
-    X = make_test(n_classes=2, n_docs=5, n_features=5)
-    for v in X:
-        print(v)
