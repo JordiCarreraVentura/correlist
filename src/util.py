@@ -1,3 +1,4 @@
+from copy import deepcopy as cp
 
 def autoconfigure():
     import os, sys
