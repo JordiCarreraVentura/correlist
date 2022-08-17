@@ -4,6 +4,9 @@ import random
 from copy import deepcopy as cp
 from tqdm import tqdm
 
+from src.util import df_to_list
+
+
 
 def make__test_data(n_classes=10, n_docs=100, n_features=1, feature_weight=(0.5, 1.0)):
 
@@ -24,17 +27,6 @@ def make__test_data(n_classes=10, n_docs=100, n_features=1, feature_weight=(0.5,
         add_class(n, n_docs, n_features, feature_weight, X, D)
         n += 1
     return X
-
-
-
-def make__correlation_matrix(X):
-    df = pd.DataFrame(X)
-    from src.CorrelationMatrix import CorrelationMatrix
-    correl = CorrelationMatrix()
-    Y = correl(df)
-    for row in Y:
-        print(row)
-
 
 
 def test__matrix_shape():
@@ -107,7 +99,18 @@ def test__correlation_matrix():
         n_features=5,
         feature_weight=(0.5, 1.0)
     )
-    correl_X = make__correlation_matrix(X)
+
+    df = pd.DataFrame(X)
+
+    print(df)
+
+    from src.CorrelationMatrix import CorrelationMatrix
+    correl = CorrelationMatrix()
+    correl_X = correl(df, n=4)
+
+    print(correl_X)
+
+
 
 
 def tests():

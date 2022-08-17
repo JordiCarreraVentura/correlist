@@ -19,16 +19,26 @@ class Column:
             self.cells = cp(obj.cells)
         else:
             raise TypeError(obj)
-        self.variance = 0.0
+        self.base = cp(self.cells)
+        self.variance = variance(self.base)
         self.uid = id(self) if uid == None else uid
 
-    def fit_variance(self):
-        self.variance = variance(self.cells)
+    def __getitem__(self, idx):
+        return self.base[idx]
 
     def __str__(self):
-        return '<Column<uid={} variance={}>>'.format(
-            str(self.uid), self.variance
+#         return '<Column<uid={} variance={} revariance={}>>'.format(
+#             str(self.uid), self.variance, self.revariance()
+#         )
+        return '<Column uid={}>'.format(
+            str(self.uid)
         )
+
+    def __len__(self):
+        return len(self.cells)
+
+    def revariance(self):
+        return variance(self.cells)
 
     def cosine(self, column):
         return cosine(np.array(self.cells), np.array(column.cells))
@@ -37,24 +47,24 @@ class Column:
         for cell in self.cells:
             yield cell
 
-    def normalize(self, vec_sum):
-        for idx, cell in enumerate(vec_sum):
-            self.cells[idx] /= cell
+    def normalize(self):
+        for idx, cell in enumerate(self.cells):
+            self.cells[idx] /= 2
 
     def __iadd__(self, column):
         for idx, cell in enumerate(column):
             self.cells[idx] += cell
         return self
 
+    def product(self, column):
+        for idx, cell in enumerate(column):
+            self.cells[idx] = 1 - (self.cells[idx] * cell)
+        return self
+
     def __isub__(self, column):
         for idx, cell in enumerate(column):
             self.cells[idx] -= cell
         return self
-
-    def penalize(self, penalty_vec):
-        for idx, cell in enumerate(penalty_vec):
-            val = self.cells[idx]
-            self.cells[idx] = val * (1 - cell)
 
 
 
@@ -73,42 +83,46 @@ class CorrelationMatrix:
         return columns
 
 
-    def __call__(self, pd, n=5, radius=1.0):
-        correl = pd.corr()
+    def __call__(self, df, n=5, radius=1.0):
+        df = df.copy()
+        correl = df.corr()
         columns = self.__matrix__to__column_list(correl)
-        for column in columns:
-            column.fit_variance()
         columns.sort(reverse=True, key=lambda x: x.variance)
 
         print('columns:', [str(c) for c in columns])
 
         reduced = []
         while columns and len(reduced) < n:
-
-            overlapping = set([])
-            sims = dict([])
+            L = len(columns)
+            sim_argmaxs = dict([(i, None) for i in range(L)])
+            sim_maxs = dict([(i, 0.0) for i in range(L)])
             for jdx, column in enumerate(columns):
-                _max = 0.0
                 for idx, prev in enumerate(reduced):
                     sim = column.cosine(prev)
-                    sims[jdx] = idx
-                    if sim >= radius and sim > _max:
-                        _max = sim
-                if _max > 0.0:
-                    overlapping.add(idx)
+                    if jdx not in sim_argmaxs \
+                    or sim > sim_maxs[jdx]:
+                        sim_argmaxs[jdx] = idx
+                        sim_maxs[jdx] = sim
 
             _columns = []
-            for idx, column in enumerate(columns):
-                if idx in overlapping:
-                    continue
-                _column = cp(columns[idx])
-                if reduced:
-                    _column -= reduced[sims[idx]]
-                _column.fit_variance()
-                _columns.append(_column)
+            if reduced:
+                for jdx, column in enumerate(columns):
+                    _column = cp(columns[jdx])
+                    if jdx not in sim_argmaxs:
+                        _columns.append(_column)
+                        continue
+#                     print(_column.cells)
+                    _column -= Column(reduced[sim_argmaxs[jdx]].base)
+                    _column.normalize()
+#                     _column.product(reduced[sim_argmaxs[jdx]])
+#                     print(reduced[sim_argmaxs[jdx]].base)
+#                     print('--')
+#                     print(_column.cells)
+#                     input()
+                    _columns.append(_column)
+                columns = _columns
 
-            columns = _columns
-            columns.sort(reverse=True, key=lambda x: x.variance)
+            columns.sort(reverse=True, key=lambda x: x.revariance())
             column = columns.pop(0)
             print('columns SELECT:', column)
             reduced.append(column)
@@ -117,4 +131,12 @@ class CorrelationMatrix:
             print('reduced:', [str(c) for c in reduced])
             print()
 
-        return reduced
+        df.drop(
+            [
+                col  for col in df.columns
+                if col not in [_col.uid for _col in reduced]
+            ],
+            axis=1,
+            inplace=True
+        )
+        return df
