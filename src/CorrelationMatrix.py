@@ -2,7 +2,10 @@ import numpy as np
 
 from scipy.spatial.distance import cosine
 
-from statistics import pvariance as variance
+from statistics import (
+    median,
+    pvariance as variance
+)
 
 from util import (
     cp,
@@ -30,15 +33,24 @@ class Column:
 #         return '<Column<uid={} variance={} revariance={}>>'.format(
 #             str(self.uid), self.variance, self.revariance()
 #         )
-        return '<Column uid={}>'.format(
-            str(self.uid)
+#         return '<Column uid={}>'.format(
+#             str(self.uid)
+#         )
+        return '<Column<uid={} revariance={}>>'.format(
+            str(self.uid), self.revariance()
         )
+
 
     def __len__(self):
         return len(self.cells)
 
     def revariance(self):
         return variance(self.cells)
+
+    def minimum(self):
+        mdn = median(self.cells)
+        #return -sum(abs(cell - mdn) for cell in self.cells)
+        return -sum(abs(cell) for cell in self.cells)
 
     def cosine(self, column):
         return cosine(np.array(self.cells), np.array(column.cells))
@@ -87,20 +99,22 @@ class CorrelationMatrix:
         df = df.copy()
         correl = df.corr()
         columns = self.__matrix__to__column_list(correl)
-        columns.sort(reverse=True, key=lambda x: x.variance)
+        columns.sort(reverse=False, key=lambda x: x.minimum())
+        #columns.sort(reverse=False, key=lambda x: x.revariance())
 
-        print('columns:', [str(c) for c in columns])
+        #print('columns:', '\n'.join([str(c) for c in columns]))
 
         reduced = []
         while columns and len(reduced) < n:
             L = len(columns)
             sim_argmaxs = dict([(i, None) for i in range(L)])
-            sim_maxs = dict([(i, 0.0) for i in range(L)])
+            sim_maxs = dict([(i, None) for i in range(L)])
             for jdx, column in enumerate(columns):
                 for idx, prev in enumerate(reduced):
-                    sim = column.cosine(prev)
-                    if jdx not in sim_argmaxs \
+                    sim = 1 - column.cosine(prev)
+                    if sim_maxs[jdx] == None \
                     or sim > sim_maxs[jdx]:
+                        #print('sim={} prev={}'.format(sim, sim_maxs[jdx]))
                         sim_argmaxs[jdx] = idx
                         sim_maxs[jdx] = sim
 
@@ -111,24 +125,21 @@ class CorrelationMatrix:
                     if jdx not in sim_argmaxs:
                         _columns.append(_column)
                         continue
-#                     print(_column.cells)
                     _column -= Column(reduced[sim_argmaxs[jdx]].base)
                     _column.normalize()
-#                     _column.product(reduced[sim_argmaxs[jdx]])
-#                     print(reduced[sim_argmaxs[jdx]].base)
-#                     print('--')
-#                     print(_column.cells)
-#                     input()
                     _columns.append(_column)
                 columns = _columns
 
-            columns.sort(reverse=True, key=lambda x: x.revariance())
+            #columns.sort(reverse=True, key=lambda x: x.revariance())
+            columns.sort(reverse=False, key=lambda x: x.minimum())
+
+            print('reduced ({}):'.format(len(reduced)), '\n'.join([str(c) for c in reduced]))
+            print('columns IN:', '\n'.join([str(c) for c in columns]))
             column = columns.pop(0)
+
             print('columns SELECT:', column)
             reduced.append(column)
 
-            print('columns IN:', [str(c) for c in columns])
-            print('reduced:', [str(c) for c in reduced])
             print()
 
         df.drop(
