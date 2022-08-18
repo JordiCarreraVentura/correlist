@@ -4,7 +4,10 @@ import random
 from copy import deepcopy as cp
 from tqdm import tqdm
 
-from src.util import df_to_list
+from src.util import (
+    cosine,
+    df_to_list
+)
 
 
 
@@ -102,13 +105,30 @@ def test__correlation_matrix():
 
     df = pd.DataFrame(X)
 
-    print(df)
+    assert df.shape == (20, 10)
 
     from src.CorrelationMatrix import CorrelationMatrix
-    correl = CorrelationMatrix()
+    correl = CorrelationMatrix(verbose=1)
     correl_X = correl(df, n=4)
 
+    print(df)
     print(correl_X)
+    assert correl_X.shape == (20, 4)
+
+    a, b, c, d = correl_X.columns
+    a1 = correl_X[a]
+    a2 = correl_X[b]
+    b1 = correl_X[c]
+    b2 = correl_X[d]
+
+    assert cosine(a1, a2) < 0.4
+    assert cosine(b1, b2) < 0.4
+    assert cosine(a1, b1) > 0.7
+    assert cosine(a1, b2) > 0.7
+    assert cosine(a2, b1) > 0.7
+    assert cosine(a2, b2) > 0.7
+    assert cosine(a1, b2) / cosine(a1, a2) > 3
+
 
 
 

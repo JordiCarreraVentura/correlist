@@ -1,13 +1,12 @@
 import numpy as np
 
-from scipy.spatial.distance import cosine
-
 from statistics import (
     median,
     pvariance as variance
 )
 
 from util import (
+    cosine,
     cp,
     df_to_list
 )
@@ -118,14 +117,14 @@ class CorrelationMatrix:
             columns = self.__select_and_reweight(columns, reduced, sim_argmaxs)
 
             if self.verbose:
-                print('reduced ({}):'.format(len(reduced)), '\n'.join([str(c) for c in reduced]))
-                print('columns IN:', '\n'.join([str(c) for c in columns]))
+                print('\ncolumns kept so far ({}):'.format(len(reduced)), '\n'.join([str(c) for c in reduced]))
+                print('\ninput columns:', '\n'.join([str(c) for c in columns]))
 
             column = columns.pop(0)
 
             if self.verbose:
-                print('columns SELECT:', column)
-                print()
+                print('\nselected column:', column)
+                print('\n============\n')
             reduced.append(column)
 
         self.__apply_reduction(df, reduced)

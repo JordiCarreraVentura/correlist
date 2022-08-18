@@ -1,5 +1,7 @@
 from copy import deepcopy as cp
 
+from scipy.spatial.distance import cosine
+
 def autoconfigure():
     import os, sys
     from pathlib import Path
