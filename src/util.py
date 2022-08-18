@@ -24,8 +24,29 @@ def autoconfigure():
 
 
 def df_to_list(df):
+    """
+    >>> import pandas as pd
+    >>> row1 = [1, 1, 1]
+    >>> row2 = [2, 2, 2]
+    >>> row3 = [3, 3, 3]
+    >>> rows = [row1, row2, row3]
+    >>> df = pd.DataFrame(rows)
+    >>> assert df.shape == (3, 3)
+    >>> assert df[0][0] == 1
+    >>> assert df[1][0] == 1
+    >>> assert df[1][1] == 2
+    >>> assert df[2][1] == 2
+    >>> assert df[0][2] == 3
+    >>> assert df[2][2] == 3
+    >>> assert df_to_list(df) == rows
+    """
     cols = df.columns
     X = []
     for row in df.itertuples(index=False):
         X.append([row[col] for col in cols])
     return X
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
