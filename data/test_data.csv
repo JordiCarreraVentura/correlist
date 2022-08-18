@@ -1,0 +1,29 @@
+Race;Unit;HP;Mana;Gold;Wood;Oil;Armor;Pop.;Sight;Speed;Damage;P. Damage;Range;Build Time;Other
+Human;Peasant;30;;400;0;;0;1;4;10;2-9;2;1;45;
+Human;Footman;60;;600;0;;2;1;4;10;6;3;1;60;
+Human;Elven Archer;40;;500;50;;2;1;5;10;3-9;6;4;70;
+Human;Knight / Paladin;90;250;800;100;;4;1;5;13;2-12;4;1;90;
+Human;Ballista;110;;900;300;;0;1;9;5;25-80;0;8;250;Splash damage
+Human;Dwarven Demolition Squad;40;;750;250;;0;1;4;11;1-6;2;1;200;Suicide 400 damage
+Human;Mage;60;250;1200;0;;0;1;9;10;2-9;2;2;120;
+Human;Gnomish Flying Machine;150;;500;100;;0;1;9;17;0;0;1;65;
+Human;Gryphon Rider;100;;2500;0;;0;1;6;14;8-16;0;4;250;Splash damage
+Human;Human Oil Tanker;90;;400;250;;0;1;4;10;0;0;1;50;
+Human;Human Transport;150;;600;200;500;0;1;4;10;0;0;1;70;
+Human;Elven Destroyer;100;;700;350;700;10;1;8;10;2-35;0;4;90;
+Human;Human Battleship;150;;1000;500;1000;15;1;8;6;50-130;0;6;140;
+Human;Gnomish Submarine;60;;800;150;800;0;1;5;7;10-50;0;7;100;
+Orc;Peon;30;;400;0;;0;1;4;10;2-9;2;1;45;
+Orc;Grunt;60;;600;0;;2;1;4;10;6;3;1;60;
+Orc;Troll Axethrower;40;;500;50;;2;1;5;10;3-9;6;4;70;
+Orc;Ogre / Ogre Magi;90;250;800;100;;4;1;5;13;2-12;4;1;90;
+Orc;Catapult;110;;900;300;;0;1;9;5;25-80;0;8;250;Splash damage
+Orc;Goblin Sappers;40;;750;250;;0;1;4;11;1-6;2;1;200;Suicide 400 damage
+Orc;Death Knight;60;250;1200;0;;0;1;9;10;2-9;2;3;120;
+Orc;Goblin Zeppelin;150;;500;100;;0;1;9;17;0;0;1;65;
+Orc;Dragon;100;;2500;0;;0;1;6;14;8-16;0;4;250;Splash damage
+Orc;Orc Oil Tanker;90;;400;250;;0;1;4;10;0;0;1;50;
+Orc;Orc Transport;150;;600;200;500;0;1;4;10;0;0;1;70;
+Orc;Troll Destroyer;100;;700;350;700;10;1;8;10;2-35;0;4;90;
+Orc;Ogre Juggernaut;150;;1000;500;1000;15;1;8;6;50-130;0;6;140;
+Orc;Giant Turtle;60;;800;150;800;0;1;5;7;10-50;0;7;100;

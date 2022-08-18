@@ -131,6 +131,16 @@ def test__correlation_matrix():
 
 
 
+def test__warcraft_data():
+
+    def preprocess_test(df):
+        return
+
+    df = pd.read_csv('data/test_data.csv', delimiter=';')
+
+    preprocess_test(df)
+
+
 
 
 def tests():
@@ -140,6 +150,7 @@ def tests():
         test__redundant_features,
         test__feature_weights,
         test__correlation_matrix,
+        test__warcraft_data,
     ]
     for test in tqdm(tests):
         print(test.__name__)
