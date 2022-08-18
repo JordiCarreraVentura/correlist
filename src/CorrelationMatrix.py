@@ -30,12 +30,6 @@ class Column:
         return self.base[idx]
 
     def __str__(self):
-#         return '<Column<uid={} variance={} revariance={}>>'.format(
-#             str(self.uid), self.variance, self.revariance()
-#         )
-#         return '<Column uid={}>'.format(
-#             str(self.uid)
-#         )
         return '<Column<uid={} revariance={}>>'.format(
             str(self.uid), self.revariance()
         )
@@ -50,7 +44,7 @@ class Column:
     def minimum(self):
         mdn = median(self.cells)
         #return -sum(abs(cell - mdn) for cell in self.cells)
-        return -sum(abs(cell) for cell in self.cells)
+        return -sum(abs(np.array(self.cells)))
 
     def cosine(self, column):
         return cosine(np.array(self.cells), np.array(column.cells))
@@ -83,8 +77,8 @@ class Column:
 
 class CorrelationMatrix:
 
-    def __init__(self):
-        return
+    def __init__(self, verbose=0):
+        self.verbose = verbose
 
     def __matrix__to__column_list(self, correl):
         Y = df_to_list(correl)
@@ -95,59 +89,90 @@ class CorrelationMatrix:
         return columns
 
 
-    def __call__(self, df, n=5, radius=1.0):
+    def __call__(self, df, n=5):
+        """
+        Given a DataFrame with `m` variables (dimensions, columns), this method retains the `n` columns (such that m: `n < m`) whose correlation with the other columns has the highest variance.
+
+        The intuition is that columns that correlate with most other columns (and hence, are likely to be redundant) will show a lower variance, as most correlation coefficients will tend to be higher on average, and the variance across similarly high values can be expected to be low.
+
+        Conversely, columns that alternate strong positive correlations with strong negative correlations and just about the same amount of no correlation events, will have the highest variance (as long as there are not a lot of the latter, since the global average over which to measure the correlation would otherwise be closer to those values and, as a result, most of the values in the distribution would again have low variance with respect to an average dominated by them).
+
+        :type n: int
+        :param n: The number of columns to keep from the total number of input columns.
+
+        :rtype: pandas.DataFrame
+        :return: The input dataset without the columns removed by this method, namely,
+                 those with the highest correlation with any of the other columns.
+        """
         df = df.copy()
         correl = df.corr()
         columns = self.__matrix__to__column_list(correl)
         columns.sort(reverse=False, key=lambda x: x.minimum())
         #columns.sort(reverse=False, key=lambda x: x.revariance())
 
-        #print('columns:', '\n'.join([str(c) for c in columns]))
-
         reduced = []
         while columns and len(reduced) < n:
-            L = len(columns)
-            sim_argmaxs = dict([(i, None) for i in range(L)])
-            sim_maxs = dict([(i, None) for i in range(L)])
-            for jdx, column in enumerate(columns):
-                for idx, prev in enumerate(reduced):
-                    sim = 1 - column.cosine(prev)
-                    if sim_maxs[jdx] == None \
-                    or sim > sim_maxs[jdx]:
-                        #print('sim={} prev={}'.format(sim, sim_maxs[jdx]))
-                        sim_argmaxs[jdx] = idx
-                        sim_maxs[jdx] = sim
 
-            _columns = []
-            if reduced:
-                for jdx, column in enumerate(columns):
-                    _column = cp(columns[jdx])
-                    if jdx not in sim_argmaxs:
-                        _columns.append(_column)
-                        continue
-                    _column -= Column(reduced[sim_argmaxs[jdx]].base)
-                    _column.normalize()
-                    _columns.append(_column)
-                columns = _columns
+            sim_argmaxs = self.__greedy__sim_search(columns, reduced)
 
-            #columns.sort(reverse=True, key=lambda x: x.revariance())
-            columns.sort(reverse=False, key=lambda x: x.minimum())
+            columns = self.__select_and_reweight(columns, reduced, sim_argmaxs)
 
-            print('reduced ({}):'.format(len(reduced)), '\n'.join([str(c) for c in reduced]))
-            print('columns IN:', '\n'.join([str(c) for c in columns]))
+            if self.verbose:
+                print('reduced ({}):'.format(len(reduced)), '\n'.join([str(c) for c in reduced]))
+                print('columns IN:', '\n'.join([str(c) for c in columns]))
+
             column = columns.pop(0)
 
-            print('columns SELECT:', column)
+            if self.verbose:
+                print('columns SELECT:', column)
+                print()
             reduced.append(column)
 
-            print()
+        self.__apply_reduction(df, reduced)
 
+        return df
+
+
+    def __select_and_reweight(self, columns, reduced, sim_argmaxs):
+        _columns = []
+        if reduced:
+            for jdx, column in enumerate(columns):
+                _column = cp(columns[jdx])
+                if jdx not in sim_argmaxs:
+                    _columns.append(_column)
+                    continue
+                _column -= Column(reduced[sim_argmaxs[jdx]].base)
+                _column.normalize()
+                _columns.append(_column)
+            columns = _columns
+
+        columns.sort(reverse=True, key=lambda x: x.revariance())
+        #columns.sort(reverse=False, key=lambda x: x.minimum())
+
+        return columns
+
+
+    def __greedy__sim_search(self, columns, reduced):
+        L = len(columns)
+        sim_argmaxs = dict([(i, None) for i in range(L)])
+        sim_maxs = dict([(i, None) for i in range(L)])
+        for jdx, column in enumerate(columns):
+            for idx, prev in enumerate(reduced):
+                sim = 1 - column.cosine(prev)
+                if sim_maxs[jdx] == None \
+                or sim > sim_maxs[jdx]:
+                    #print('sim={} prev={}'.format(sim, sim_maxs[jdx]))
+                    sim_argmaxs[jdx] = idx
+                    sim_maxs[jdx] = sim
+        return sim_argmaxs
+
+
+    def __apply_reduction(self, df, reduced):
         df.drop(
             [
-                col  for col in df.columns
-                if col not in [_col.uid for _col in reduced]
+                df.columns[col_idx] for col_idx in range(len(df.columns))
+                if col_idx not in [_col.uid for _col in reduced]
             ],
             axis=1,
             inplace=True
         )
-        return df
