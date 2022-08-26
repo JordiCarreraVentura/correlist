@@ -33,7 +33,6 @@ class Column:
             str(self.uid), self.revariance()
         )
 
-
     def __len__(self):
         return len(self.cells)
 
@@ -105,6 +104,7 @@ class CorrelationMatrix:
         """
         df = df.copy()
         correl = df.corr()
+
         columns = self.__matrix__to__column_list(correl)
         columns.sort(reverse=False, key=lambda x: x.minimum())
         #columns.sort(reverse=False, key=lambda x: x.revariance())

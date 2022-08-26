@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+import re
 
 from copy import deepcopy as cp
 from tqdm import tqdm
@@ -134,11 +135,147 @@ def test__correlation_matrix():
 def test__warcraft_data():
 
     def preprocess_test(df):
-        return
 
-    df = pd.read_csv('data/test_data.csv', delimiter=';')
+        def split_damage(cell):
+            if '-' not in cell:
+                return int(cell)
+            a, b = cell.split('-')
+            a = int(a)
+            b = int(b)
+            return int(sum([a, b]) / 2)
 
-    preprocess_test(df)
+        def normalize_name(column_name):
+            NON_ALPHA = re.compile('[^a-z]+')
+            name = column_name.lower().strip()
+            name = NON_ALPHA.sub('_', name)
+            return name
+
+
+        columns_num = [
+            col for col in df.columns
+            if col not in ['Race', 'Unit', 'Other']
+        ]
+
+        columns_alpha = [
+            col for col in df.columns
+            if col in ['Race', 'Unit', 'Other']
+        ]
+
+        # non-numerical:    Race	Unit    Other
+        df_alpha = df.copy()
+
+        df_alpha.drop(columns_num, axis=1, inplace=True)
+
+        # numerical:        HP	Mana	Gold	Wood	Oil	Armor	Pop.	Sight	Speed	Damage	P. Damage	Range	Build Time
+        df_num = df.copy()
+        df_num.drop(columns_alpha, axis=1, inplace=True)
+
+        # Separate numerical and non-numerical columns.
+
+        # Rescaling not necessary if using a matrix of correlations.
+
+        # Remove invariant columns
+        for col in df_num.columns:
+            if len(set(df_num[col])) == 1:
+                df_num.drop(col, axis=1, inplace=True)
+
+        # Fill empty cells
+        df_num['Mana'].fillna(0, inplace=True)
+        df_num['Oil'].fillna(0, inplace=True)
+        df_num['Damage'] = df_num['Damage'].apply(split_damage)
+        df_num['Damage'] = df_num['Damage'].astype(int)
+
+        # Normalize column names to PEP
+        column_renaming = {
+            column: normalize_name(column)
+            for column in df_num.columns
+        }
+        df_num.rename(columns=column_renaming, inplace=True)
+
+#         for col in df_num.columns:
+#             print(col, set(df_num[col]), '\n' * 3)
+
+        return df_num, df_alpha
+
+
+    df = pd.read_csv('data/test_data_1.csv', delimiter=';')
+
+    df_num, df_alpha = preprocess_test(df)
+
+    from src.CorrelationMatrix import CorrelationMatrix
+    correl = CorrelationMatrix(verbose=0)
+    correl_X = correl(df_num, n=2)
+
+    expected = set(['wood', 'speed'])
+    assert set(correl_X.columns).intersection(expected) == expected
+
+
+
+
+def test__warlords_data():
+
+    def preprocess_test(df):
+
+        def normalize_name(column_name):
+            NON_ALPHA = re.compile('[^a-z]+')
+            name = column_name.lower().strip()
+            name = NON_ALPHA.sub('_', name)
+            return name
+
+        columns_num = [
+            col for col in df.columns
+            if col not in ['Unit', 'M.Bonus', 'C.Bonus', 'Power']
+        ]
+
+        columns_alpha = [
+            col for col in df.columns
+            if col in ['Unit', 'M.Bonus', 'C.Bonus', 'Power']
+        ]
+
+        # non-numerical:    Race	Unit    Other
+        df_alpha = df.copy()
+        df_alpha.drop(columns_num, axis=1, inplace=True)
+
+        # numerical:        HP	Mana	Gold	Wood	Oil	Armor	Pop.	Sight	Speed	Damage	P. Damage	Range	Build Time
+        df_num = df.copy()
+        df_num.drop(columns_alpha, axis=1, inplace=True)
+
+        # Separate numerical and non-numerical columns.
+
+        # Rescaling not necessary if using a matrix of correlations.
+
+        # Remove invariant columns
+        for col in df_num.columns:
+            if len(set(df_num[col])) == 1:
+                df_num.drop(col, axis=1, inplace=True)
+
+        # Fill empty cells
+
+        # Normalize column names to PEP
+        column_renaming = {
+            column: normalize_name(column)
+            for column in df_num.columns
+        }
+        df_num.rename(columns=column_renaming, inplace=True)
+
+#         for col in df_num.columns:
+#             print(col, set(df_num[col]), '\n' * 3)
+
+        return df_num, df_alpha
+
+
+    df = pd.read_csv('data/test_data_2.csv', delimiter=';')
+
+    df_num, df_alpha = preprocess_test(df)
+
+
+    from src.CorrelationMatrix import CorrelationMatrix
+    correl = CorrelationMatrix(verbose=0)
+    correl_X = correl(df_num, n=2)
+
+    expected = set(['setup', 'mdl'])
+    assert set(correl_X.columns).intersection(expected) == expected
+
 
 
 
@@ -151,6 +288,7 @@ def tests():
         test__feature_weights,
         test__correlation_matrix,
         test__warcraft_data,
+        test__warlords_data,
     ]
     for test in tqdm(tests):
         print(test.__name__)

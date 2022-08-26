@@ -40,10 +40,10 @@ def df_to_list(df):
     >>> assert df[2][2] == 3
     >>> assert df_to_list(df) == rows
     """
-    cols = df.columns
+    cols = list(df.columns)
     X = []
     for row in df.itertuples(index=False):
-        X.append([row[col] for col in cols])
+        X.append([row[cols.index(col)] for col in cols])
     return X
 
 
