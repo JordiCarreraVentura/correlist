@@ -1,6 +1,8 @@
+import re
 from copy import deepcopy as cp
 
 from scipy.spatial.distance import cosine
+
 
 def autoconfigure():
     import os, sys
@@ -45,6 +47,22 @@ def df_to_list(df):
     for row in df.itertuples(index=False):
         X.append([row[cols.index(col)] for col in cols])
     return X
+
+
+def normalize_name(column_name):
+    """
+    >>> assert normalize_name('alpha') == '_alpha'
+    >>> assert normalize_name('.alpha') == '_alpha'
+    >>> assert normalize_name('alpha..') == '_alpha'
+    >>> assert normalize_name('1alpha') == '_1alpha'
+    >>> assert normalize_name('alpha_beta!_gamma^_123') == '_alpha_beta_gamma_123'
+    >>> assert normalize_name('ThisIs...ATest') == '_thisis_atest'
+    """
+    NON_ALPHA = re.compile('[^a-z0-9]+', re.IGNORECASE)
+    non_alphas = NON_ALPHA.findall(column_name)
+    name = column_name.lower().strip(''.join(non_alphas))
+    name = NON_ALPHA.sub('_', name)
+    return f'_{name}'
 
 
 if __name__ == '__main__':

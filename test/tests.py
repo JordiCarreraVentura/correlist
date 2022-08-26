@@ -1,13 +1,13 @@
 import pandas as pd
 import random
-import re
 
 from copy import deepcopy as cp
 from tqdm import tqdm
 
 from src.util import (
     cosine,
-    df_to_list
+    df_to_list,
+    normalize_name
 )
 
 
@@ -144,13 +144,6 @@ def test__warcraft_data():
             b = int(b)
             return int(sum([a, b]) / 2)
 
-        def normalize_name(column_name):
-            NON_ALPHA = re.compile('[^a-z]+')
-            name = column_name.lower().strip()
-            name = NON_ALPHA.sub('_', name)
-            return name
-
-
         columns_num = [
             col for col in df.columns
             if col not in ['Race', 'Unit', 'Other']
@@ -206,7 +199,7 @@ def test__warcraft_data():
     correl = CorrelationMatrix(verbose=0)
     correl_X = correl(df_num, n=2)
 
-    expected = set(['wood', 'speed'])
+    expected = set(['_wood', '_speed'])
     assert set(correl_X.columns).intersection(expected) == expected
 
 
@@ -215,12 +208,6 @@ def test__warcraft_data():
 def test__warlords_data():
 
     def preprocess_test(df):
-
-        def normalize_name(column_name):
-            NON_ALPHA = re.compile('[^a-z]+')
-            name = column_name.lower().strip()
-            name = NON_ALPHA.sub('_', name)
-            return name
 
         columns_num = [
             col for col in df.columns
@@ -273,10 +260,61 @@ def test__warlords_data():
     correl = CorrelationMatrix(verbose=0)
     correl_X = correl(df_num, n=2)
 
-    expected = set(['setup', 'mdl'])
+    expected = set(['_setup', '_mdl'])
     assert set(correl_X.columns).intersection(expected) == expected
 
 
+
+def test_preprocessor():
+    from src.Pipeline import Preprocessor
+    preproc = Preprocessor()
+
+    df = pd.DataFrame({
+        'num_1': [0, 1, 2, 3],
+        'num_2': [0.0, 1.0, 2.5, 3.5],
+        'alpha_1': ['A', 'A', 'B', 'B']
+    })
+
+    df_num, df_alpha, column_mapping = preproc(df)
+
+    expected = set(['_num_1', '_num_2'])
+    excluded = set(['alpha_1'])
+
+    assert column_mapping == {
+        '_num_1': 'num_1',
+        '_num_2': 'num_2',
+    }
+    assert set(df_num.columns).intersection(expected) == expected
+    assert set(df_alpha.columns).intersection(excluded) == excluded
+
+
+
+
+def test_postprocessor():
+    from src.Pipeline import Postprocessor
+    posproc = Postprocessor()
+
+    df_num = pd.DataFrame({
+        '_num_1': [0, 1, 2, 3],
+        '_num_2': [0.0, 1.0, 2.5, 3.5]
+    })
+
+    df_alpha = pd.DataFrame({
+        'alpha_1': ['A', 'A', 'B', 'B']
+    })
+
+    column_mapping = {
+        '_num_1': 'num_1',
+        '_num_2': 'num_2',
+    }
+
+    df = posproc(df_alpha, df_num, column_mapping, key='num_1 num_2 alpha_1'.split())
+
+    assert df.values.tolist() == pd.DataFrame({
+        'num_1': [0, 1, 2, 3],
+        'num_2': [0.0, 1.0, 2.5, 3.5],
+        'alpha_1': ['A', 'A', 'B', 'B']
+    }).values.tolist()
 
 
 
@@ -289,6 +327,8 @@ def tests():
         test__correlation_matrix,
         test__warcraft_data,
         test__warlords_data,
+        test_preprocessor,
+        test_postprocessor,
     ]
     for test in tqdm(tests):
         print(test.__name__)
