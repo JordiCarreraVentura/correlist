@@ -5,7 +5,7 @@ from statistics import (
     pvariance as variance
 )
 
-from util import (
+from src.util import (
     cosine,
     cp,
     df_to_list
@@ -104,6 +104,9 @@ class CorrelationMatrix:
         """
         df = df.copy()
         correl = df.corr()
+
+        if self.verbose:
+            print(list(enumerate(df.columns)))
 
         columns = self.__matrix__to__column_list(correl)
         columns.sort(reverse=False, key=lambda x: x.minimum())

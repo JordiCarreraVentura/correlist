@@ -3,9 +3,9 @@ import re
 
 from collections import Counter
 
-from CorrelationMatrix import CorrelationMatrix
+from src.CorrelationMatrix import CorrelationMatrix
 
-from util import normalize_name
+from src.util import normalize_name
 
 
 class Preprocessor:
@@ -67,16 +67,20 @@ class Preprocessor:
             elif self.is_num(dtypes):
                 columns_num.append(col)
             else:
-                print(dtypes)
+                print(col, dtypes)
                 columns_drop.append(col)
 
-        # Separate numerical and non-numerical columns.
 
+        # Separate numerical and non-numerical columns.
         df_alpha = df.copy()
         df_alpha.drop(columns_num, axis=1, inplace=True)
 
         df_num = df.copy()
         df_num.drop(columns_alpha, axis=1, inplace=True)
+
+
+        # Drop unrecognized columns
+        df_num.drop(columns_drop, axis=1, inplace=True)
 
 
         # Rescaling not necessary if using a matrix of correlations.
@@ -86,16 +90,16 @@ class Preprocessor:
             df_num[col].fillna(0, inplace=True)
 
         # Normalize column names to PEP
-        column_renaming = {
+        column_mapping = {
             column: normalize_name(column)
             for column in df_num.columns
         }
-        df_num.rename(columns=column_renaming, inplace=True)
+        df_num.rename(columns=column_mapping, inplace=True)
 
 #         for col in df_num.columns:
 #             print(col, set(df_num[col]), '\n' * 3)
 
-        return df_num, df_alpha, {val: key for key, val in column_renaming.items()}
+        return df_num, df_alpha, {val: key for key, val in column_mapping.items()}
 
 
 
@@ -104,7 +108,7 @@ class Postprocessor:
     def __init__(self):
         return
 
-    def __call__(self, df_alpha, df_num, column_renaming, key=[]):
+    def __call__(self, df_alpha, df_num, column_mapping, key=[]):
         """
         :param df_num:  ...........
         :type df_num:   pandas.DataFrame
@@ -112,8 +116,8 @@ class Postprocessor:
         :param df_alpha:  ...........
         :type df_alpha:   pandas.DataFrame
 
-        :param column_renaming:  ...........
-        :type column_renaming:   dict
+        :param column_mapping:  ...........
+        :type column_mapping:   dict
 
         :rtype:     pandas.DataFrame
         :return:    ...........
@@ -122,43 +126,43 @@ class Postprocessor:
         if not key:
             merged = df_alpha.copy()
             for col in df_num.columns:
-                merged[column_renaming[col]] = df_num[col]
+                merged[column_mapping[col]] = df_num[col]
         else:
-            _key = []
-            for col in key:
-                if col in column_renaming.values():
-                    _key.append([
-                        __key for __key, val in column_renaming.items()
-                        if col == val
-                    ].pop())
-                else:
-                    _key.append(col)
-            key = _key
+            original_keys = key
+            current_keys = []
+            for col in original_keys:
+                mapped = False
+                for key, val in column_mapping.items():
+                    if val == col:
+                        current_keys.append(key)
+                        mapped = True
+                        break
+                if not mapped:
+                    current_keys.append(col)
+
             columns = dict([])
             A = df_alpha.columns
             N = df_num.columns
-            for col in key:
-                if col not in A and col not in N:
-                    continue
-                elif col in A:
+            for col, _col in zip(original_keys, current_keys):
+                if col == _col:
                     columns[col] = df_alpha[col]
-                else:
-                    columns[col] = df_num[col]
+                elif col != _col and _col in N:
+                    columns[col] = df_num[_col]
             merged = pd.DataFrame(columns)
 
         return merged
 
 
 
-def pipeline(df, n=2):
+def pipeline(df, n=2, verbose=0):
     preproc = Preprocessor()
     posproc = Postprocessor()
-    correl = CorrelationMatrix(verbose=0)
+    correl = CorrelationMatrix(verbose=verbose)
 
-    df_num, df_alpha, column_renaming = preproc(df)
+    df_num, df_alpha, column_mapping = preproc(df)
 
     df_red = correl(df_num, n=n)
 
-    df_pos = posproc(df_alpha, df_red, column_renaming)
+    df_pos = posproc(df_alpha, df_red, column_mapping, key=list(df.columns))
 
-    print(df_pos)
+    return df_pos

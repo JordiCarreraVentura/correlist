@@ -317,6 +317,19 @@ def test_postprocessor():
     }).values.tolist()
 
 
+def test_pipeline():
+    from src.Pipeline import pipeline
+    df = pd.read_csv('data/test_data_2.csv', delimiter=';')
+    df_ = pipeline(df, n=2, verbose=0)
+
+    expected = set(['Unit', 'Setup', 'M.Bonus', 'C.Bonus', 'Power', 'Mdl'])
+
+    assert df.shape == (134, 13)
+    assert df_.shape == (134, 6)
+    assert set(df_.columns).intersection(expected) == expected
+
+
+
 
 def tests():
 
@@ -329,6 +342,7 @@ def tests():
         test__warlords_data,
         test_preprocessor,
         test_postprocessor,
+        test_pipeline,
     ]
     for test in tqdm(tests):
         print(test.__name__)
