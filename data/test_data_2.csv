@@ -1,0 +1,138 @@
+Unit;Str;Hit;Trn;Cost;Mv;Vw;Upk;Setup;M.Bonus;C.Bonus;Power;Mdl
+Air Elementals;7;2;4;1100;36;3;8;600;Fly;None;Morale +2;16
+Archers;3;1;1;40;19;2;1;90;;None;Missiles +2;20
+Archons;8;2;4;800;26;4;12;700;Fly;None;Morale +3;15
+Assassin;1;1;3;600;18;3;15;450;;City +1;Assassin +5;15
+Ballistae;5;1;2;300;16;1;4;250;;City +3;Missiles +1;20
+Balrog;7;3;4;1200;24;3;10;800;Fly;None;Acid +3;15
+Banshee;2;1;1;200;24;3;4;150;Fly;Marsh +1;Curse +3;5
+Barbarians;2;2;1;75;20;3;1;75;Hills;Hills +1;Banding +2;25
+Barge;2;1;1;50;18;3;2;25;;None;None;20
+Basilisk;4;2;2;300;22;2;5;250;None;None;Paralysis +4;10
+Battering Ram;3;2;3;400;20;1;4;250;None;City +2;Siege +3;20
+Beholder;8;3;4;1100;18;6;7;700;None;None;Curse +5;15
+Black Dragons;9;3;5;2000;26;4;14;1000;Fly;None;Acid +5;8
+Black Rider;6;3;3;700;18;2;7;600;None;Field +2;Fear +3;20
+Blue Dragons;9;3;5;1800;26;4;14;1000;Fly;None;Lightning +5;12
+Boar Rider;2;3;2;250;22;2;3;200;Forest;Field +1;Chaos +1;25
+Boneship;6;2;1;300;22;3;2;150;;None;None;20
+Brass Dragon;9;3;5;1200;26;4;14;800;Fly;None;Fear +4;10
+Catapults;2;1;2;250;16;2;4;100;;City +2;Siege +2;22
+Cave Wyrms;6;4;4;1000;20;1;10;600;;None;Siege +2;20
+Centaurs;4;2;2;500;22;3;4;200;Woods;Woods +1;Missiles +2;20
+Chimaera;7;3;4;1200;22;3;10;800;Fly;None;Lightning +4;15
+Clay Golems;4;2;2;400;16;1;2;300;;City +1;Trample +1;25
+CockatrIce;4;2;3;450;50;5;2;300;Hills/Woods;City +1;Paralysis +3;27
+Cyclops;5;4;3;750;20;1;4;500;Hills/Forest;Hills +1;Trample +1;20
+Dark Pegasi;5;2;2;500;22;3;10;300;Fly;Ice +2;Fear +2;14
+Dryads;2;2;2;100;18;2;1;100;Forest;Woods +5;Morale +1;30
+Dust Wyrms;5;3;4;700;20;1;8;600;Hills/Desert;City +1;Siege +3;20
+Dwarf Crossbow;2;3;1;400;15;2;2;100;Hills;Hills +1;Missiles +2;18
+Dwarf Infantry;3;3;1;100;14;2;2;75;Hills;Hills +1;None;15
+Dwarf Mutants;5;3;3;600;15;2;6;500;Hills;Hills +1;Chaos +2;22
+Dwarf Runners;1;4;1;30;18;2;1;40;"Hill/Dun/
+For";Hills +1;None;30
+Eagles;6;2;3;750;36;4;6;500;Fly;None;Morale +1;18
+Elephants;8;3;4;800;16;3;5;500;;None;Trample +1;30
+Elven Archers;3;1;1;350;16;3;2;140;Forest;Woods +1;Missiles +4;15
+Elven Cavalry;5;1;2;250;32;3;4;200;Forest;Woods +1;Morale +2;30
+Elven Infantry;4;1;1;50;24;3;1;50;Forest;Woods +1;Dwarfslayer;30
+Elven Lords;6;2;3;700;26;3;10;600;Forest;Forest +1;Demonslayer;15
+Emerald Dragon;9;3;5;1200;26;4;14;800;Fly;None;Chaos +4;10
+Fire Demons;8;3;4;1000;20;2;10;700;;None;Chaos +3;22
+Fire Elementals;7;2;4;1100;32;2;4;600;Fly;None;Chaos +2;20
+Frost Dragon;9;3;5;2000;26;4;14;1000;Fly;None;Fortify +2;10
+Ghosts;5;2;2;450;18;2;2;300;Fly;Marsh +1;Curse +4;20
+Ghouls;3;2;1;300;15;2;3;150;Marsh;Marsh +1;Disease +2;18
+Giant Bats;1;1;1;35;28;3;1;20;Fly;None;None;30
+Giant Bees;2;1;2;300;38;3;2;100;Fly;None;Poison +4;25
+Giant Rats;1;1;1;10;18;2;1;50;;None;Banding +6;15
+Giant Scorpions;5;2;3;500;22;2;3;350;Desert;Desert +3;Poison +6;20
+Giant Spiders;4;1;2;350;20;2;3;150;;City +1;Poison +3;40
+Giants;6;3;3;400;16;2;8;250;Hills;Hills +1;Chaos +2;20
+Gladiator;2;3;2;400;18;2;5;250;None;City +1;Assassin +3;50
+Gnoll Cavalry;5;2;3;700;24;2;7;400;;None;Assassin +4;18
+Gnoll Crossbow;4;2;2;300;15;2;4;150;;None;Assassin +2;18
+Gnolls;2;2;1;100;15;2;2;70;;None;Assassin +1;18
+Gnome;1;3;1;40;20;5;1;50;Hills/Forest;Hills +1;Banding +2;35
+Goblins;1;2;1;5;22;6;1;30;"Hill/Des/
+For/Mar";Woods +1;Banding +2;50
+Gold Dragons;9;3;5;1500;26;4;14;1000;Fly;None;Morale +4;8
+Greatship;4;2;1;200;22;3;3;100;;None;None;20
+Green Dragons;9;3;5;1500;26;4;14;1000;Fly;None;Fear +5;10
+Green Slime;4;2;2;100;18;1;1;50;Marsh;Marsh +1;Acid +2;20
+Griffons;6;3;3;750;24;3;8;500;Fly;Hills +1;Morale +1;25
+Halfling Braves;2;2;1;10;28;5;1;40;Hills/Forest;Forest +1;None;65
+Halflings;2;2;1;200;16;2;2;100;Woods;Woods +1;Missiles +3;25
+Harpies;4;2;2;350;22;3;2;200;Fly;Woods +1;Curse +4;22
+Heavy Cavalry;5;2;2;200;24;1;4;175;;Field +1;None;40
+Heavy Infantry;3;2;1;80;16;1;2;75;;None;None;25
+Hellhounds;2;2;1;400;20;2;5;200;;None;Fear +1;18
+Hobgoblin;5;4;3;450;18;3;8;380;Dungeon;None;Chaos +1;25
+Hydra;7;4;4;1200;16;2;9;700;Marsh;Marsh +2;Poison +4;8
+Ice Demons;5;3;3;600;22;2;10;500;Ice;Ice +5;Chaos +2;35
+Iceguard;7;2;3;800;18;3;8;500;Ice/Forest;Ice +1;Fortify +1;35
+Imps;1;3;1;300;22;4;4;200;Fly;Woods +1;Lightning +2;25
+Iron Golems;6;3;4;1000;16;2;1;800;;City +1;Trample +3;17
+Knight Lords;6;3;3;700;18;1;6;400;;Field +2;Dragonslayer;20
+Knights;5;2;2;450;18;1;4;300;;Field +2;Grp Ward +1;18
+Knight Templar;8;3;4;1000;20;2;10;800;None;None;Morale +3;30
+Lamia;7;4;4;1200;22;3;12;700;Fly;None;Disease +7;10
+Lava Wyrm;6;3;5;1600;20;1;15;900;Hills;Hills +2;Siege +5;20
+Leviathan;8;3;4;1200;18;2;10;800;None;None;Grp Ward +1;10
+Liches;8;2;4;800;16;2;7;600;Marsh;Marsh +1;Fear +4;22
+Light Cavalry;4;2;2;150;30;2;2;125;;Field +1;None;48
+Light Infantry;2;2;1;50;18;2;1;50;;None;None;50
+Manticore;7;2;4;1000;24;3;10;750;Fly;None;Missiles +1;15
+Marksman;3;2;2;400;16;2;5;350;None;City +2;Missiles +3;20
+Medusae;6;2;3;600;18;2;2;400;Dungeon;None;Paralysis +6;20
+Minotaurs;5;3;3;600;16;2;5;400;;City +2;Chaos +2;20
+Moonguard;6;2;3;800;18;3;8;500;Forest;Woods +1;Missiles +4;14
+Mummies;3;4;2;400;14;1;10;250;Desert;Desert +2;Poison +3;20
+Nightmares;3;2;2;500;25;3;2;400;;None;Banding +4;15
+Ogres;4;3;2;200;16;2;5;150;Hills;Hills +1;Morale +1;20
+Orc Mobs;2;2;1;10;16;2;1;60;Hills;Hills +1;None;40
+Orogs;4;2;2;125;20;2;4;100;Hills;Hills +1;Siege +1;20
+Outrider;3;2;2;300;26;6;3;200;Hills/Forest;Field +2;Missiles +2;30
+Peasants;1;2;1;1;18;3;1;20;;None;Banding +3;40
+Pega Centaur;5;2;2;600;24;3;8;300;Fly;Field +1;Missiles +2;15
+Pegasi;5;2;2;500;24;3;10;300;Fly;City +1;Morale +1;15
+Phoenix;6;4;4;1100;22;3;10;800;Fly;None;Banding +2;15
+Pikemen;2;3;1;100;16;2;1;100;;Field +1;None;30
+Plague Carriers;7;1;2;600;15;1;1;300;;None;Disease +5;19
+Reavers;6;2;2;650;19;3;6;400;Hills;Hills +1;Chaos +1;19
+Red Dragons;9;3;5;1600;26;4;14;1000;Fly;None;Chaos +5;10
+Roc Rider;5;2;3;600;22;3;5;450;Fly;None;Siege +2;30
+Rock Elementals;6;4;4;1000;15;1;4;750;Hills;Hills +3;Warding +3;26
+Rover;2;2;1;25;22;6;1;30;Hills/Forest;Field +1;Missiles +1;25
+Royal Dragon;9;4;5;2400;24;4;15;1000;Fly;None;Warding +3;9
+Royal Guard;3;2;2;400;15;2;7;300;None;City +2;Fortify +1;60
+Sasquatch;8;1;3;900;16;1;8;450;Forest;Forest +1;Trample +2;5
+Scouts;1;1;1;10;26;3;1;30;"Hill/For/
+Mar/Dun";None;None;49
+Siege Engines;3;2;3;600;16;2;4;300;;City +3;Siege +4;14
+Silver Dragons;9;3;5;1200;30;4;16;800;Fly;None;Morale +3;13
+Skeletons;2;1;1;75;16;2;1;50;Marsh;Marsh +2;Warding +2;35
+Slayer Knights;7;3;4;1300;16;1;10;800;;None;Chaos +4;20
+Spectres;8;2;4;1000;22;3;10;750;Fly;Marsh +1;Curse +6;25
+Stone Golems;5;2;3;650;16;2;1;400;;City +1;Trample +2;20
+Straw Golem;3;2;1;150;16;1;2;80;None;None;Trample +1;35
+Succubus;7;2;4;1000;22;3;10;750;Fly;None;Assassin +3;5
+Sylph;1;3;1;60;22;5;2;50;Fly;None;None;25
+Titan;7;4;4;1200;16;2;12;750;None;None;Missiles +1;15
+Treants;6;4;4;1300;15;2;10;800;Forest;Woods +2;Siege +3;20
+Trolls;5;2;3;300;16;1;6;250;Marsh/Forest;Woods +1;Fear +2;22
+Undead Beasts;8;3;5;1400;20;2;9;900;Ice;Ice +1;Chaos +4;12
+Undead Dragon;9;4;5;1500;24;3;4;1000;Fly;None;Curse +5;15
+Undead Horde;7;1;2;250;20;1;4;150;Hills;Hills +2;None;35
+Unicorns;6;2;3;750;28;4;5;500;Woods;Woods +3;Morale +3;14
+Vampire Bat;1;1;1;100;26;5;2;50;Fly;Hills +1;Assassin +1;30
+Wargs;4;2;2;400;25;2;3;200;Forest;Woods +1;Warding +4;35
+Warlock;6;2;3;800;20;2;6;500;None;None;Lightning +4;15
+Warship;8;3;1;400;25;3;4;200;;None;None;20
+Water Elemental;9;4;4;600;30;3;4;300;;None;None;20
+Wights;4;2;2;250;16;2;2;175;Marsh;Marsh +1;Fear +2;25
+Wolfriders;3;2;2;150;25;3;3;100;Forest;Woods +1;Warding +3;55
+Wraiths;5;2;3;700;24;2;5;350;Fly;Marsh +1;Fear +3;18
+Wyvern;8;2;4;1000;26;4;9;750;Fly;None;Poison +6;15
+Zombies;2;3;1;100;13;1;1;80;Marsh;Marsh +1;Fear +1;19
