@@ -19,7 +19,6 @@ def autoconfigure():
         or obj.startswith('.') \
         or obj.startswith('__'):
             continue
-        print(full_path)
         if full_path not in sys.path:
             sys.path.append(full_path)
 

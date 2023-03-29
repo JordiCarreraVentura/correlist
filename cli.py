@@ -8,7 +8,7 @@ HELP_DROP = 'A list of column names. Any columns in this list will be dropped fo
 
 HELP_KEEP = 'A list of column names. Any columns in this list will be kept forcefully and returned in the output DataFrame. Defaults to an empty list.'
 
-HELP__N_DIMS = 'Maximum number of (numerical) dimensions from the CSV to keep, after sorting them by explanatory power. Defaults to 2.'
+HELP__N_DIMS = 'Maximum number of (numerical) dimensions from the CSV to keep, after sorting them by explanatory power. Required argument.'
 
 HELP_OUT = 'Location where the output will be written, either a string denoting a path in the local filesystem, or nothing, in which case all output will be written to `stdout`.'
 
