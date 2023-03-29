@@ -1,3 +1,4 @@
+import csv
 import re
 from copy import deepcopy as cp
 
@@ -63,6 +64,15 @@ def normalize_name(column_name):
     name = column_name.lower().strip(''.join(non_alphas))
     name = NON_ALPHA.sub('_', name)
     return f'_{name}'
+
+
+def write_output(df, out):
+    if out:
+        df.to_csv(out, index=False)
+    else:
+        for row in csv.writer(df.iterrows(index=False), quoting=csv.QUOTEALL):
+            out.write(row)
+    return True
 
 
 if __name__ == '__main__':
