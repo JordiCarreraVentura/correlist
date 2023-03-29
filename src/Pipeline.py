@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import re
 
@@ -33,7 +34,15 @@ class Preprocessor:
             return True
         return False
 
-    def __call__(self, df):
+    def impute_defaultval(self, most_freq__dtype):
+        if most_freq__dtype == float:
+            return 0.0
+        elif most_freq__dtype == int:
+            return 0
+        else:
+            return 'no_value'
+
+    def __call__(self, df, drop=[], keep=[]):
         """
         :param df:  The input dataset containing the matrix that must undergo
                     dimensionality reduction.
@@ -52,7 +61,10 @@ class Preprocessor:
                       categorial data.
 
         """
-        df = df.copy()
+
+        # Remove columns manually dropped
+        if drop:
+            df.drop(drop, axis=1, inplace=True)
 
         # Remove invariant columns
         for col in df.columns:
@@ -61,13 +73,31 @@ class Preprocessor:
 
         columns_num, columns_alpha, columns_drop = [], [], []
         for col in df.columns:
+
+            df.select_dtypes(object).fillna('None', inplace=True)
+            df.select_dtypes(float).fillna(0.0, inplace=True)
+            df.select_dtypes(int).fillna(0, inplace=True)
+
+            if col in keep:
+                columns_alpha.append(col)
+                continue
+
             dtypes = Counter([val.__class__.__name__ for val in df[col]])
+            most_freq__dtype = dtypes.most_common(1)[0] if dtypes.items() else None
+
             if self.is_alpha(dtypes):
                 columns_alpha.append(col)
             elif self.is_num(dtypes):
                 columns_num.append(col)
+            elif most_freq__dtype in [float, int]:
+                most_freq__dtype_str = str(most_freq__dtype)
+                print(f'Info: imputing values for type {most_freq__dtype_str} in column "{col}".')
+                df[col] = df[col].fillna(self.impute_defaultval(most_freq__dtype))
+            elif most_freq__dtype:
+                columns_alpha.append(col)
             else:
-                print(col, dtypes)
+                dtypes_str = str(dtypes_str)
+                print(f'Warning: column "{col}" contains data types that cannot be handled and will be dropped: {dtypes_str}.')
                 columns_drop.append(col)
 
 
@@ -84,10 +114,14 @@ class Preprocessor:
 
 
         # Rescaling not necessary if using a matrix of correlations.
+#         from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
+#         for col in df_num.columns:
+#             sclr = StandardScaler()
+#             df_num[col] = sclr.fit_transform(np.array(df_num[col]).reshape(-1, 1))
 
-        # Fill empty cells
-        for col in columns_num:
-            df_num[col].fillna(0, inplace=True)
+#         # Fill empty cells
+#         for col in columns_num:
+#             df_num[col].fillna(0, inplace=True)
 
         # Normalize column names to PEP
         column_mapping = {
@@ -154,12 +188,12 @@ class Postprocessor:
 
 
 
-def pipeline(df, n=2, verbose=0):
+def pipeline(df, n=2, verbose=0, drop=[], keep=[]):
     preproc = Preprocessor()
     posproc = Postprocessor()
     correl = CorrelationMatrix(verbose=verbose)
 
-    df_num, df_alpha, column_mapping = preproc(df)
+    df_num, df_alpha, column_mapping = preproc(df, drop=drop, keep=keep)
 
     df_red = correl(df_num, n=n)
 

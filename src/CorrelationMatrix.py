@@ -89,11 +89,6 @@ class CorrelationMatrix:
 
     def __call__(self, df, n=5):
         """
-        Given a DataFrame with `m` variables (dimensions, columns), this method retains the `n` columns (such that m: `n < m`) whose correlation with the other columns has the highest variance.
-
-        The intuition is that columns that correlate with most other columns (and hence, are likely to be redundant) will show a lower variance, as most correlation coefficients will tend to be higher on average, and the variance across similarly high values can be expected to be low.
-
-        Conversely, columns that alternate strong positive correlations with strong negative correlations and just about the same amount of no correlation events, will have the highest variance (as long as there are not a lot of the latter, since the global average over which to measure the correlation would otherwise be closer to those values and, as a result, most of the values in the distribution would again have low variance with respect to an average dominated by them).
 
         :type n: int
         :param n: The number of columns to keep from the total number of input columns.
@@ -101,6 +96,14 @@ class CorrelationMatrix:
         :rtype: pandas.DataFrame
         :return: The input dataset without the columns removed by this method, namely,
                  those with the highest correlation with any of the other columns.
+
+        Description
+        -----------
+        Given a DataFrame with `m` variables (dimensions, columns), this method retains the `n` columns (such that m: `n < m`) whose correlation with the other columns has the highest variance.
+
+        The intuition is that columns that correlate with most other columns (and hence, are likely to be redundant) will show a lower variance, as most correlation coefficients will tend to be higher on average, and the variance across similarly high values can be expected to be low.
+
+        Conversely, columns that alternate strong positive correlations with strong negative correlations and just about the same amount of no correlation events, will have the highest variance (as long as there are not a lot of the latter, since the global average over which to measure the correlation would otherwise be closer to those values and, as a result, most of the values in the distribution would again have low variance with respect to an average dominated by them).
         """
         df = df.copy()
         correl = df.corr()
@@ -120,8 +123,8 @@ class CorrelationMatrix:
             columns = self.__select_and_reweight(columns, reduced, sim_argmaxs)
 
             if self.verbose:
-                print('\ncolumns kept so far ({}):'.format(len(reduced)), '\n'.join([str(c) for c in reduced]))
-                print('\ninput columns:', '\n'.join([str(c) for c in columns]))
+                print('\ncolumns kept so far ({}):\n{}'.format(len(reduced), '\n'.join([str(c) for c in reduced])))
+                print('\ninput columns:\n{}'.format('\n'.join([str(c) for c in columns])))
 
             column = columns.pop(0)
 
@@ -129,6 +132,10 @@ class CorrelationMatrix:
                 print('\nselected column:', column)
                 print('\n============\n')
             reduced.append(column)
+
+
+        if self.verbose:
+            print('\ncolumns kept at the end ({}):\n{}'.format(len(reduced), '\n'.join([str(c) for c in reduced])))
 
         self.__apply_reduction(df, reduced)
 

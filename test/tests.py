@@ -101,7 +101,7 @@ def test__correlation_matrix():
         n_classes=2,
         n_docs=10,
         n_features=5,
-        feature_weight=(0.5, 1.0)
+        feature_weight=(0.0, 1.0)
     )
 
     df = pd.DataFrame(X)
@@ -320,7 +320,7 @@ def test_postprocessor():
 def test_pipeline():
     from src.Pipeline import pipeline
     df = pd.read_csv('data/test_data_2.csv', delimiter=';')
-    df_ = pipeline(df, n=2, verbose=0)
+    df_ = pipeline(df, n=2, verbose=1)
 
     expected = set(['Unit', 'Setup', 'M.Bonus', 'C.Bonus', 'Power', 'Mdl'])
 
