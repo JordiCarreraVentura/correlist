@@ -23,7 +23,7 @@ def autoconfigure():
         if full_path not in sys.path:
             sys.path.append(full_path)
 
-    print(sys.path)
+    #print(sys.path)
 
 
 def df_to_list(df):
