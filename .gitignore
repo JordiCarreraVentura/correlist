@@ -152,7 +152,5 @@ cython_debug/
 #.idea/
 
 # Source data files
-data/bank/bank-full.csv
-data/bank/bank-names.txt
-data/bank/bank-url.txt
-data/bank/bank.csv
+data/*/*.csv
+data/*/*.txt
