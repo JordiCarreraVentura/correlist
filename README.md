@@ -1,6 +1,6 @@
 # correlist
 
-## Table of contents
+## Table of contents
 
 1. Example
 2. Usage and parameter documentation
