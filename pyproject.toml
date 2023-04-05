@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "correlist"
+version = "0.1.0"
+description = "Dimensionality reduction by iteratively removing correlated variables."
+authors = ["Jordi Carrera Ventura <jordi.carrera.ventura@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.24.2"
+pandas = "^2.0.0"
+tqdm = "^4.65.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
